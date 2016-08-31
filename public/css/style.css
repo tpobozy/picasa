@@ -1,0 +1,11 @@
+body {
+    min-height: 800px;
+    padding-top: 70px;
+}
+
+.pictures-list {
+    padding: 20px 0px;
+}
+.pictures-list .btn-link {
+    padding: 0px;
+}
