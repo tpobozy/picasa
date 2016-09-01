@@ -15,6 +15,7 @@ var app = express();
 var db = mongoose.connection;
 
 
+mongoose.connect('mongodb://localhost/picasa');
 
 db.on('error', console.error);
 db.once('open', function() {
@@ -43,7 +44,7 @@ app.use(cookieParser());
 
 var day = new Date( Date.now() + 24 * 3600 * 1000 ); // 1 day
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'polcode-picasa-2016-08', cookie:{maxAge: day} }));
+app.use(session({ secret: 'polcode-picasa-tmp', cookie:{maxAge: day} }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -56,7 +57,7 @@ var isAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/');
+    res.redirect('/auth/login');
 };
 
 app.use(function (req, res, next) {
@@ -65,15 +66,23 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(function (req, res, next) {
+    req.rootPath = __dirname;
+    next();
+});
+
 
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
+app.use('/account', isAuthenticated, require('./routes/account'));
 //app.use('/users', isAuthenticated, require('./routes/users'));
 app.use('/users', require('./routes/users'));
+//
 app.use('/galleries', isAuthenticated, require('./routes/galleries'));
 app.use('/gallery', isAuthenticated, require('./routes/gallery'));
-app.use('/photos', isAuthenticated, require('./routes/photos'));
-app.use('/photo', isAuthenticated, require('./routes/photo'));
+//app.use('/pictures', isAuthenticated, require('./routes/pictures'));
+app.use('/pictures', require('./routes/pictures'));
+app.use('/picture', isAuthenticated, require('./routes/picture'));
 
 
 // catch 404 and forward to error handler
@@ -84,9 +93,6 @@ app.use(function (req, res, next) {
 });
 
 // error handlers
-
-
-mongoose.connect('mongodb://localhost/picasa');
 
 // development error handler
 // will print stacktrace

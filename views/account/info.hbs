@@ -1,0 +1,24 @@
+
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        
+        <form class="form-signin" method="post" action="/account">
+            <h2 class="form-signin-heading">Account Info</h2>
+                    
+            <label class="sr-only">Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Email name" value="{{ user.name }}" >
+
+            <br>
+
+            <label class="sr-only">Email address</label>
+            <input type="text" class="form-control" name="email" placeholder="Email address" value="{{ user.email }}" readonly>
+
+            <br>
+            <br>
+
+            <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+            
+        </form>
+
+    </div>
+</div>
