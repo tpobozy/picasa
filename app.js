@@ -10,6 +10,7 @@ var session = require('express-session');
 //var hbs = require('hbs');
 var exphbs = require('express-handlebars');
 var flash = require('connect-flash');
+var config = require('./config');
 
 var app = express();
 var db = mongoose.connection;
@@ -44,7 +45,8 @@ app.use(cookieParser());
 
 var day = new Date( Date.now() + 24 * 3600 * 1000 ); // 1 day
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'polcode-picasa-tmp', cookie:{maxAge: day} }));
+var secret_key = process.env.SECRET_KEY || config.secret_key;
+app.use(session({ secret: secret_key, cookie:{maxAge: day} }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
