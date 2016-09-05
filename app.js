@@ -16,6 +16,12 @@ var db = mongoose.connection;
 
 
 
+
+// https://www.npmjs.com/package/shortid
+// OR
+// https://www.npmjs.com/package/mongoose-auto-increment
+
+
 mongoose.connect(dbConfig.url);
 
 db.on('error', console.error);

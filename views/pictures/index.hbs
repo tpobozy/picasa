@@ -5,16 +5,27 @@
 
 <div class="row pictures-list">
     {{#each pictures}}
-        <div class="col-lg-4">
-            <a class="btn-remove-picture btn-link" href="#/picture/{{ this.id }}/remove" >
-                <i class="glyphicon glyphicon-remove"></i>
-            </a>
+        <div class="col-sm-3 picture">
+            
+            <div class="picture-image-box">
+                <a class="btn-remove-picture btn-link" href="#/picture/{{ this.id }}/remove" >
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+                <a class="picture-image btn-link" href="/picture/{{ this.id }}/edit" >
+                    <img class="img-thumbnail img-responsive" style="width: 140px; height: 140px;" src="{{ this.filepath }}" >
+                </a>
+            </div>
 
-            <a class="btn btn-link" href="/gallery/id/picture/{{ this.id }}" >
-                <img class="img-rounded" style="width: 140px; height: 140px;" src="{{ this.filepath }}" >
-            </a>
-
-            <p>{{ this.title }}</p>
+            <p>
+                <a class="btn-user-icon" href="#remove" >
+                    <i class="glyphicon glyphicon-user"></i>
+                </a>
+                {{#if this.title }}
+                    <a class="picture-image btn-link" href="/gallery/id/picture/{{ this.id }}" >
+                        {{ this.title }}
+                    </a>
+                {{/if}}
+            </p>
         </div>
     {{/each}}
 </div>

@@ -9,3 +9,13 @@ body {
 .pictures-list .btn-link {
     padding: 0px;
 }
+.pictures-list .picture-image-box {
+    position: relative;
+    display: inline-block;
+}
+.pictures-list .picture-image-box .btn-remove-picture {
+    position: absolute;
+    top: -8px;
+    right: -7px;
+    z-index: 120;
+}
