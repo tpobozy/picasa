@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
-var User = require('../models/user');
+var Picture = require('../models/picture');
 var multer = require('multer');
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, req.rootPath + '/public/uploads');
+        console.log(req.uploadPath);
+        callback(null, req.uploadPath);
     },
     filename: function (req, file, callback) {
         callback(null, Date.now() + '-' + file.originalname.replace(/ /g,''));
@@ -17,16 +18,17 @@ var upload = multer({ storage : storage }).array('picture');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    /* TODO get user photos
-    Photo.findAllByUser(user, function(err, users) {
-        res.send(photos);
-    });
-    */
     
+    Picture.findAllByUser(req.user, function(err, pictures) {
+        if (err) {
+            console.error(err);
+        }
 
-    res.render('pictures/index', {
-        title: 'My photos',
-        errors: req.flash('error')
+        res.render('pictures/index', {
+            title: 'My pictures',
+            pictures: pictures,
+            errors: req.flash('error')
+        });
     });
 });
 
@@ -41,34 +43,30 @@ router.get('/create', function(req, res, next) {
 
 router.post('/create', function(req, res, next) {
 
-    upload(req,res,function(err) {
-        console.log(req.body);
-        console.log(req.files);
-        
+    upload(req, res, function(err) {
         if (err) {
             console.log(err);
             return res.end("Error uploading file.");
         }
-        
+
+        console.log(req.files);
+        //console.log(req);
+
+        req.files.forEach(function(file) {
+            var picture = new Picture({
+                filename: file.filename,
+                author: req.user.id
+            });
+            picture.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    return res.end("Error saving picture.");
+                }
+            });
+        });
+
         res.redirect('/pictures');
     });
-
-
-
-//    var name = req.params.name;
-//
-//    var User = mongoose.model('User', { name: String });
-//
-//    var kitty = new User({ name: name });
-//    kitty.save(function (err) {
-//        if (err) {
-//            console.log(err);
-//        } else {
-//            console.log('new user created');
-//        }
-//    });
-//
-//    res.redirect('/users');
 });
 
 module.exports = router;
