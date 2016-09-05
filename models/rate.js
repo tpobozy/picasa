@@ -6,7 +6,7 @@ var User = require('./user');
 var rateSchema = new Schema({
     rate: Number,
     author: {type: Schema.Types.ObjectId, ref: 'User'},
-    create_date: {type: Date, default: Date.now}
+    createDate: {type: Date, default: Date.now}
 });
 
 
