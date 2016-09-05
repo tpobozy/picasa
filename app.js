@@ -7,16 +7,16 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session');
-//var hbs = require('hbs');
-var exphbs = require('express-handlebars');
 var flash = require('connect-flash');
-var config = require('./config');
+var appConfig = require('./config/app');
+var dbConfig = require('./config/database');
 
 var app = express();
 var db = mongoose.connection;
 
 
-mongoose.connect('mongodb://localhost/picasa');
+
+mongoose.connect(dbConfig.url);
 
 db.on('error', console.error);
 db.once('open', function() {
@@ -25,15 +25,7 @@ db.once('open', function() {
 });
 
 
-app.engine('.hbs', exphbs({
-    defaultLayout: 'base',
-    extname: '.hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts')
-}));
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'views'));
-
-
+require('./config/views')(app, Error);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -45,12 +37,12 @@ app.use(cookieParser());
 
 var day = new Date( Date.now() + 24 * 3600 * 1000 ); // 1 day
 app.use(express.static(path.join(__dirname, 'public')));
-var secret_key = process.env.SECRET_KEY || config.secret_key;
+var secret_key = process.env.SECRET_KEY || appConfig.secret_key;
 app.use(session({ secret: secret_key, cookie:{maxAge: day} }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(passport.authenticate('remember-me'));
+//app.use(passport.authenticate('remember-me'));
 
 
 
@@ -87,6 +79,7 @@ app.use('/pictures', require('./routes/pictures'));
 app.use('/picture', isAuthenticated, require('./routes/picture'));
 
 
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -99,7 +92,7 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    
+
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {

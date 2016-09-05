@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-//var passportLocalMongoose = require('passport-local-mongoose');
-
+var bcrypt = require('bcrypt');
 
 
 var userSchema = new Schema({
@@ -9,22 +8,26 @@ var userSchema = new Schema({
     password: String,
     email: String,
     isActive: {type: Boolean, default: true},
-    create_date: {type: Date, default: Date.now}
+    createDate: {type: Date, default: Date.now}
 });
 
 
-userSchema.statics.findAll = function(callback) {
+userSchema.statics.findAll = function (callback) {
     return this.find({}, callback);
 };
 
-userSchema.methods.validPassword = function (password) {
-    if (password === this.password) {
-        return true;
-    } else {
-        return false;
-    }
+
+userSchema.methods.generateHash = function (password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };
-//userSchema.plugin(passportLocalMongoose);
+userSchema.methods.validPassword = function (password) {
+    console.log('password=' + password);
+    return bcrypt.compareSync(password, this.password);
+
+
+    //return (password === this.password);
+
+};
 
 
 module.exports = mongoose.model('User', userSchema);

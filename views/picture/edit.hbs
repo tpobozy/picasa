@@ -1,1 +1,27 @@
 
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+
+        <form class="form-signin" method="post" action="">
+
+            <img src="{{ picture.filepath }}" >
+
+
+            <label class="sr-only">Title</label>
+            <input type="text" class="form-control" name="name" placeholder="Email name" value="{{ picture.title }}" >
+
+            <br>
+
+            <label class="sr-only">Location</label>
+            <map>
+                TODO dane z exif
+            </map>
+            <br>
+            <br>
+
+            <button class="btn btn-lg btn-success btn-block" type="submit">Update</button>
+
+        </form>
+
+    </div>
+</div>
