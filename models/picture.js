@@ -4,7 +4,7 @@ var RateSchema = require('./rate').schema;
 var CommentSchema = require('./comment').schema;
 
 
-var photoSchema = new Schema({
+var pictureSchema = new Schema({
     title: String,
     lat: Number,
     lng: Number,
@@ -15,9 +15,9 @@ var photoSchema = new Schema({
 });
 
 
-photoSchema.statics.findAll = function(callback) {
+pictureSchema.statics.findAll = function(callback) {
     return this.find({}, callback);
 };
 
 
-module.exports = mongoose.model('Photo', photoSchema);
+module.exports = mongoose.model('Picture', pictureSchema);
