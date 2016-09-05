@@ -62,6 +62,7 @@ app.use(function (req, res, next) {
 
 app.use(function (req, res, next) {
     req.rootPath = __dirname;
+    req.uploadPath = path.join(__dirname, 'public/' + appConfig.upload_dir);
     next();
 });
 
@@ -74,8 +75,8 @@ app.use('/users', require('./routes/users'));
 //
 app.use('/galleries', isAuthenticated, require('./routes/galleries'));
 app.use('/gallery', isAuthenticated, require('./routes/gallery'));
-//app.use('/pictures', isAuthenticated, require('./routes/pictures'));
-app.use('/pictures', require('./routes/pictures'));
+app.use('/pictures', isAuthenticated, require('./routes/pictures'));
+//app.use('/pictures', require('./routes/pictures'));
 app.use('/picture', isAuthenticated, require('./routes/picture'));
 
 
